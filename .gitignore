@@ -3,3 +3,4 @@ node/node_modules/
 *.mdf
 *.ldf
 mysql/mysql/columns_priv.MYD
+mysql/mysql/columns_priv.MYI
