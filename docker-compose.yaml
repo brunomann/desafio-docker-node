@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  app-node:
+    build:
+      context: ./node
+      dockerfile: Dockerfile
+    image: bmannramos/app-node:prod
+    container_name: app-node
+    volumes:
+      - ./node:/usr/src/app
+    tty: true
+    entrypoint: npm install node index.js
+    ports:
+      - "3000:3000"
+    networks:
+      - desafio-nginx
+    depends_on:
+      - app-db
+      
+  app-db:
+    image: mysql:5.7.16
+    command: --innodb-use-native-aio=0
+    container_name: app-db
+    tty: true
+    restart: always
+    # entrypoint: mysqld --initialize mysqld --init-file=/docker-entrypoint-initdb.d/dump.sql
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./mysql:/var/lib/mysql
+      # - ./dump:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      - desafio-nginx
+
+  app-nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: bmannramos/app-nginx:prod
+    container_name: app-nginx
+    tty: true
+    ports:
+      - "8080:80"
+    networks:
+      - desafio-nginx
+    depends_on:
+      - app-node
+        
+networks:
+  desafio-nginx:
+    driver: bridge
