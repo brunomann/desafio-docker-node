@@ -1,7 +1,1 @@
 node/node_modules/
-# SQL Server files
-*.mdf
-*.ldf
-mysql/mysql/columns_priv.MYD
-mysql/mysql/columns_priv.MYI
-mysql/mysql/columns_priv.frm
