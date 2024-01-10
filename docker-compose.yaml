@@ -10,7 +10,7 @@ services:
     volumes:
       - ./node:/usr/src/app
     tty: true
-    entrypoint: npm install node index.js
+    entrypoint: node index.js
     ports:
       - "3000:3000"
     networks:
@@ -19,18 +19,25 @@ services:
       - app-db
       
   app-db:
-    image: mysql:5.7.16
-    command: --innodb-use-native-aio=0
+    image: mysql:latest
+    user: "mysql:mysql"
+    restart: always
+    # command: --innodb-use-native-aio=0
+    # command: ["--init-file", "/docker-entrypoint-initdb.d/init_script.sh"]
+    command: --default-authentication-plugin=mysql_native_password
     container_name: app-db
     tty: true
-    restart: always
-    # entrypoint: mysqld --initialize mysqld --init-file=/docker-entrypoint-initdb.d/dump.sql
+    # entrypoint:  mysqld --init-file=/docker-entrypoint-initdb.d/dump.sql --user=root
     environment:
       - MYSQL_DATABASE=nodedb
       - MYSQL_ROOT_PASSWORD=root
+      # - MYSQL_ROOT_HOST = '%'
+
     volumes:
-      - ./mysql:/var/lib/mysql
-      # - ./dump:/docker-entrypoint-initdb.d/dump.sql
+      - ./mysql-data:/var/lib/mysql
+      - ./dump/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      # - ./dump/init_container.sh:/docker-entrypoint-initdb.d/init_container.sh
+      # command: ["--init-file", "/docker-entrypoint-initdb.d/init_container.sh"]
     networks:
       - desafio-nginx
 
