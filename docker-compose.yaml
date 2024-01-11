@@ -7,10 +7,10 @@ services:
       dockerfile: Dockerfile
     image: bmannramos/app-node:prod
     container_name: app-node
-    volumes:
-      - ./node:/usr/src/app
+    # volumes:
+      # - ./node:/usr/src/app
     tty: true
-    command: ["node index.js"]
+    entrypoint:  node index.js
     ports:
       - "3000:3000"
     networks:
