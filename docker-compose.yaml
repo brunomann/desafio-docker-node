@@ -10,7 +10,7 @@ services:
     volumes:
       - ./node:/usr/src/app
     tty: true
-    entrypoint: node index.js
+    command: ["node index.js"]
     ports:
       - "3000:3000"
     networks:
