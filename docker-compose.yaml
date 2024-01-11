@@ -7,8 +7,8 @@ services:
       dockerfile: Dockerfile
     image: bmannramos/app-node:prod
     container_name: app-node
-    # volumes:
-      # - ./node:/usr/src/app
+    volumes:
+      - ./node:/usr/src/app
     tty: true
     entrypoint:  node index.js
     ports:
