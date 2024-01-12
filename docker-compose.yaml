@@ -7,10 +7,13 @@ services:
       dockerfile: Dockerfile
     image: bmannramos/app-node:prod
     container_name: app-node
-    # volumes:
-    #   - ./node:/usr/src/app
+    user: "root:root"
+    volumes:
+        - ./node:/usr/src/app
+        - ./node/node_modules:/usr/src/app/node_modules
     tty: true
-    entrypoint:  node index.js
+    entrypoint: 
+    command: sh -c "yarn install && node /usr/src/app/index.js"
     ports:
       - "3000:3000"
     networks:
@@ -20,24 +23,17 @@ services:
       
   app-db:
     image: mysql:latest
-    user: "mysql:mysql"
     restart: always
-    # command: --innodb-use-native-aio=0
-    # command: ["--init-file", "/docker-entrypoint-initdb.d/init_script.sh"]
     command: --default-authentication-plugin=mysql_native_password
     container_name: app-db
     tty: true
-    # entrypoint:  mysqld --init-file=/docker-entrypoint-initdb.d/dump.sql --user=root
     environment:
       - MYSQL_DATABASE=nodedb
       - MYSQL_ROOT_PASSWORD=root
       # - MYSQL_ROOT_HOST = '%'
-
     volumes:
       - ./mysql-data:/var/lib/mysql
       - ./dump/dump.sql:/docker-entrypoint-initdb.d/dump.sql
-      # - ./dump/init_container.sh:/docker-entrypoint-initdb.d/init_container.sh
-      # command: ["--init-file", "/docker-entrypoint-initdb.d/init_container.sh"]
     networks:
       - desafio-nginx
 

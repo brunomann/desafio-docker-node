@@ -1,10 +1,7 @@
-FROM node:15
-
-COPY . /usr/src/app
+FROM node:21-alpine3.18
 
 WORKDIR /usr/src/app
 
-RUN npm install
+COPY package.json /usr/src/app/
 
 EXPOSE 3000
-
